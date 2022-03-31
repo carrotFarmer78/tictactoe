@@ -16,8 +16,7 @@ document.querySelectorAll(".box")
 
                     setTimeout(() => on(), 1000)
 
-                    setTimeout(() => replayButtonOn(), 500)
-                    replayButton.append(document.createTextNode("Replay"))
+                    replayAdd()
                     return;
                 }
                 if (check2()) {
@@ -26,9 +25,13 @@ document.querySelectorAll(".box")
 
                     setTimeout(() => on(), 1000)
 
-                    setTimeout(() => replayButtonOn(), 500)
-                    replayButton.append(document.createTextNode("Replay"))
+
+                    replayAdd()
+
+
                 }
+
+                console.log("test")
 
 
 
@@ -73,9 +76,38 @@ function off() {
 }
 
 function replayButtonOn() {
-    document.getElementsByClassName("display").style.display = "block";
+    getReplayButton().style.display = "block";
 }
+
+function getReplayButton() {
+    return document.querySelector(".replayButton");
+}
+
+
 
 function replayButtonOff() {
     document.getElementsByClassName("display").style.display = "none";
+}
+
+function replayAdd(){
+    setTimeout(() => {
+        replayButtonOn();
+        getReplayButton().append(document.createTextNode("Replay"))
+    },1000 )
+
+    getReplayButton().addEventListener("click", ()=>{
+        document.querySelectorAll(".box")
+            .forEach(e =>{
+                e.removeChild(e.firstChild)
+            })
+
+
+
+
+    })
+
+
+
+
+
 }
