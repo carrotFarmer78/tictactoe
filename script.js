@@ -1,10 +1,13 @@
 let player = true
 let playerChar = () => player ? "X" : "O"
+let playerX = 0
+let playerO = 0
+let playerChar2 = () => player ? "O" : "X"
 
-
+whosMoving()
 document.querySelectorAll(".box")
     .forEach((e) => e.addEventListener("click", () => {
-
+        whosMoving()
             if (!e.hasChildNodes()) {
                 let textNode = document.createTextNode(playerChar());
 
@@ -17,6 +20,9 @@ document.querySelectorAll(".box")
                     setTimeout(() => on(), 1000)
 
                     replayAdd()
+                    counter()
+                    displayWins()
+
                     return;
                 }
                 if (check2()) {
@@ -95,19 +101,72 @@ function replayAdd(){
         getReplayButton().append(document.createTextNode("Replay"))
     },1000 )
 
-    getReplayButton().addEventListener("click", ()=>{
+    getReplayButton().addEventListener("click", ()=>
+    {
         document.querySelectorAll(".box")
-            .forEach(e =>{
-                e.removeChild(e.firstChild)
-            })
-
-
-
-
+            .forEach(e => {
+                while (e.hasChildNodes())
+                {
+                    e.removeChild(e.firstChild)
+                    off()
+                }
+                while(getReplayButton().hasChildNodes())
+                {
+                    getReplayButton().removeChild(getReplayButton().firstChild)
+                }
+                while(resultElement.hasChildNodes())
+                {
+                    resultElement.removeChild(resultElement.firstChild)
+                }
+            }
+            )
     })
+}
+
+function counter(){
+    if(player){
+        playerX += 1
+        console.log("X: "+playerX)
+    }
+    else{
+        playerO += 1
+        console.log("O: "+ playerO)
+    }
+    player = true
+}
+
+function displayWins() {
+
+    document.querySelectorAll(".score")
+        .forEach(e => {
+            while (e.hasChildNodes()) {
+                e.removeChild(e.firstChild)
+            }
+        })
+
+    if(playerX > 1){
+        document.querySelector(".scoreX").append(document.createTextNode("Player X has: " + playerX + " Wins!"))
+    }
+    else{
+        document.querySelector(".scoreX").append(document.createTextNode("Player X has: " + playerX + " Win!"))
+    }
+    if(playerO > 1){
+        document.querySelector(".scoreO").append(document.createTextNode("Player O has: " + playerO + " Wins!"))
+    }
+    else{
+        document.querySelector(".scoreO").append(document.createTextNode("Player O has: " + playerO + " Win!"))
+
+    }
 
 
 
-
+}
+function whosMoving(){
+    if(document.querySelector(".move").hasChildNodes()){
+        while(document.querySelector(".move").hasChildNodes()){
+            document.querySelector(".move").removeChild(document.querySelector(".move").firstChild)
+        }
+    }
+    document.querySelector(".move").append(document.createTextNode("Player "+playerChar2()+" is currently moving"))
 
 }

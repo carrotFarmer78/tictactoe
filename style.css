@@ -27,7 +27,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+    background-color: rgba(0,0,0,0.4); /* Black background with opacity */
     z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
     cursor: pointer; /* Add a pointer on hover */
 }
@@ -116,3 +116,23 @@ body {
     width: 30%;
     height: 200px;
 }
+
+.scoreX{
+    font-size: 20px;
+    width: 35%;
+    height: 30px;
+
+}
+
+.move {
+     font-size: 20px;
+        width:   65%;
+}
+
+.scoreO {
+    font-size: 20px;
+    width: 30%;
+    height: 30px;
+}
+
+
