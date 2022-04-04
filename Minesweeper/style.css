@@ -1,0 +1,17 @@
+.cell {
+    border: 1px solid red;
+}
+
+.row{
+    display: flex;
+    flex-wrap: wrap;
+}
+.cell {
+    height: 30px;
+    width: 30px;
+}
+
+.bomb {
+    height: 25px;
+    width: 25px;
+}
