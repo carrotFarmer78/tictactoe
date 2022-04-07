@@ -3,7 +3,9 @@
     border-top: lightgray;
 
 }
-
+.hidden{
+    background: lightgray;
+}
 .row{
     display: flex;
     flex-wrap: wrap;
