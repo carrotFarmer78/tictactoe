@@ -1,6 +1,8 @@
 .cell {
     border: 1px solid;
     border-top: lightgray;
+    text-align: center;
+    font-size: 25px;
 
 }
 .hidden{
@@ -18,4 +20,20 @@
 .bomb {
     height: 25px;
     width: 25px;
+}
+.explosion{
+    background: lightcoral;
+}
+
+.winLoose{
+    border: 2px solid;
+    background: lightcoral;
+    display: table;
+    font-size: 50px;
+}
+.replayButton{
+
+}
+.green{
+    background: palegreen;
 }

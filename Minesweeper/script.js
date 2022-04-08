@@ -2,30 +2,44 @@ const el = document.createElement('div');
 let htmlToAdd = '<div class="playground">'
 let column = Array(10)
 let field = Array(10)
-let zuBearbeiten = Array()
-let nulls = Array()
+let amountOfBombs
 
-for (let i = 0; i < 10; i++) {
-    htmlToAdd += '<div class="row">';
-    for (let x = 0; x < 10; x++) {
-        const id = i * 10 + x;
-        htmlToAdd += `<div class="cell hidden" data-row="${i}" data-cell="${x}"></div>`;
+init();
+
+function init() {
+    document.querySelector('.playground')?.remove()
+    const winLoose = document.querySelector('.winLoose');
+    winLoose?.firstChild ? winLoose.removeChild(winLoose.firstChild) : false
+    const replayButton = document.querySelector('.replayButton');
+    replayButton?.firstChild ? replayButton.removeChild(replayButton.firstChild) : false
+
+    for (let i = 0; i < field.length; i++) {
+        field[i] = new Array(10);
+    }
+
+    for (let i = 0; i < field.length; i++) {
+        for (let j = 0; j < column.length; j++) {
+            field[i][j] = false;
+        }
+    }
+
+    for (let i = 0; i < 10; i++) {
+        htmlToAdd += '<div class="row">';
+        for (let x = 0; x < 10; x++) {
+            const id = i * 10 + x;
+            htmlToAdd += `<div class="cell hidden" data-row="${i}" data-cell="${x}"></div>`;
+        }
+        htmlToAdd += '</div>';
     }
     htmlToAdd += '</div>';
-}
-htmlToAdd += '</div>';
-el.innerHTML = htmlToAdd;
-document.querySelector('.minesweeper').appendChild(el.firstChild);
+    el.innerHTML = htmlToAdd;
+    document.querySelector('.minesweeper').appendChild(el.firstChild);
+    activateClick()
 
-for (let i = 0; i < field.length; i++) {
-    field[i] = new Array(10);
 }
-for (let i = 0; i < field.length; i++) {
-    for (let j = 0; j < column.length; j++) {
-        field[i][j] = false;
-    }
-}
-for (let i = 0; i < 10; i++) {
+
+for(let i = 0; i < 10 ; i++)
+{
     getBomb()
 }
 
@@ -42,9 +56,9 @@ function getBomb() {
         getBomb()
     }
 }
-getSetBomb(0,0)
 
-function getSetBomb(x,y){
+
+function getSetBomb(x, y) {
     field[x][y] = undefined
 
 
@@ -61,49 +75,93 @@ console.log('field' + field)
 //     }
 // }
 
+function clickEventListener (event) {
 
-document.querySelectorAll(".cell")
-    .forEach((e) => e.addEventListener("click", () => {
-
-    if(field[e.getAttribute('data-row')] [e.getAttribute('data-cell')] === undefined) {
+    const e = event.currentTarget
+    //LOOSE
+    if (field[e.getAttribute('data-row')] [e.getAttribute('data-cell')] === undefined) {
 
         console.log("Bombe getroffen")
 
         showAllBombs()
 
-    }
-    else {if (!field[e.getAttribute('data-row')] [e.getAttribute('data-cell')]) {
+        document.querySelector('winLoose')
+
+        document.querySelector('.winLoose').append(document.createTextNode("You have Lost!"))
+
+        deactivateClick()
+
+
+    } else {
+        if (!field[e.getAttribute('data-row')] [e.getAttribute('data-cell')]) {
 
             showField(e.getAttribute('data-row'), e.getAttribute('data-cell'))
-
-
             field[e.getAttribute('data-row')] [e.getAttribute('data-cell')] = true
 
+            if (checkWin()) {
+                document.querySelector('.winLoose').classList.add('green')
+                document.querySelector('.winLoose').append(document.createTextNode("You have won!"))
 
-            console.log(
-                e.getAttribute('data-row') + "%%" + e.getAttribute('data-cell'
-                ))
-        } else {
-            console.log("Feld bereits Aufgedeckt")
+                deactivateClick()
+
+
+                console.log(
+                    e.getAttribute('data-row') + "%%" + e.getAttribute('data-cell'
+                    ))
+            } else {
+                console.log("Feld bereits Aufgedeckt")
+            }
+
+
         }
+    }
+}
 
 
-    }}));
+
+function activateClick() {
+    document.querySelectorAll(".cell")
+        .forEach((e) => e.addEventListener("click", clickEventListener));
+}
+
+function deactivateClick() {
+
+    document.querySelectorAll(".cell")
+        .forEach((e) => e.removeEventListener("click", clickEventListener))
+    document.querySelector('.replayButton').append(document.createTextNode('Play again'))
+
+    document.querySelector('.replayButton').addEventListener("click", newGame);
+}
+
+function newGame() {
+    init();
+
+/*    activateClick()
+    for (let i = 0; i < field.length; i++) {
+        for (let j = 0; j < column.length; j++) {
+            field[i][j] = false;
+        }
+    }*/
+
+    temp()
 
 
-function showAllBombs(){
-    for(let x = 0; x > 10; x++){
+}
 
-        for(let y = 0; y >10; y++){
 
-            if(field[x][y] === undefined){
+function showAllBombs() {
+    for (let x = 0; x < 10; x++) {
+
+        for (let y = 0; y < 10; y++) {
+
+            if (field[x][y] === undefined) {
 
                 const el = document.querySelector(`[data-row="${x}"][data-cell="${y}"]`)
                 const parent = document.createElement('div');
                 parent.innerHTML = '<img class="bomb" src="bomb.png">';
                 el.appendChild(parent.firstChild);
-
-
+                document.querySelector(`[data-row="${x}"][data-cell="${y}"]`).classList.add('explosion')
+                document.querySelector(`[data-row="${x}"][data-cell="${y}"]`).classList.remove('hidden')
             }
 
 
@@ -115,11 +173,28 @@ function showAllBombs(){
 
 }
 
+function checkWin() {
+    let counter = 0
+    for (let x = 0; x < 10; x++) {
 
+        for (let y = 0; y < 10; y++) {
+            if (document.querySelector(`[data-row="${x}"][data-cell="${y}"]`).classList.contains('hidden')) {
+
+                counter += 1
+
+            }
+        }
+    }
+    if (counter === 10) {
+        return true
+    } else {
+        return false
+    }
+}
 
 
 function showField(x, y) {
-    getNeighboursBombCount(x,y)
+    getNeighboursBombCount(x, y)
 }
 
 
@@ -127,7 +202,6 @@ function getNeighboursBombCount(x, y) {
     x = Number(x)
     y = Number(y)
     let bombCounter = 0
-
 
 
     if (y !== 0) {
@@ -232,7 +306,9 @@ function getNeighboursBombCount(x, y) {
 
 
     if (field[x] [y] === false) {
-        document.querySelector(`[data-row="${x}"][data-cell="${y}"]`).append(document.createTextNode(bombCounter))
+        if (bombCounter !== 0) {
+            document.querySelector(`[data-row="${x}"][data-cell="${y}"]`).append(document.createTextNode(bombCounter))
+        }
         document.querySelector(`[data-row="${x}"][data-cell="${y}"]`).classList.remove('hidden')
     }
 
